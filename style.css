@@ -10,9 +10,9 @@ body {
 /* TOPO */
 .topo img {
   width: 100%;
+  height: auto;
   max-height: 60vh;
   object-fit: cover;
-  transform: rotate(180deg);
 }
 
 /* CONTEÚDO */
