@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(180deg, #000, #1a001a);
+  color: #fff;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* TOPO */
+.topo img {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: cover;
+  transform: rotate(180deg);
+}
+
+/* CONTEÚDO */
+.conteudo {
+  padding: 30px 20px;
+  position: relative;
+  z-index: 2;
+}
+
+h1 {
+  color: #ff4d6d;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* BOTÕES */
+.botoes {
+  margin: 25px 0;
+}
+
+button {
+  padding: 14px 28px;
+  margin: 8px;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.play {
+  background: linear-gradient(45deg, #ff416c, #ff4b2b);
+}
+
+.pause {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* FRASE FINAL */
+.frase-final {
+  margin-top: 30px;
+  font-style: italic;
+  color: #ffd6e0;
+}
+
+/* CORAÇÕES */
+.hearts::before,
+.hearts::after {
+  content: "❤️ 💖 💕 💘 💗";
+  position: fixed;
+  width: 100%;
+  animation: subir 15s linear infinite;
+  opacity: 0.3;
+  font-size: 22px;
+}
+
+.hearts::after {
+  animation-duration: 20s;
+  opacity: 0.2;
+}
+
+@keyframes subir {
+  from {
+    bottom: -10%;
+  }
+  to {
+    bottom: 110%;
+  }
+}
