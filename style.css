@@ -82,3 +82,52 @@ button:hover { transform:scale(1.05); }
   .spotify-player { padding:15px; }
   .spotify-info strong { font-size:14px; }
 }
+
+/* Correção: o iframe do YouTube substitui o elemento interno; o invólucro permanece oculto. */
+.player-musica-wrapper {
+  position: fixed !important;
+  left: -10000px !important;
+  top: 0 !important;
+  width: 200px !important;
+  height: 200px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+.player-musica-wrapper iframe {
+  width: 200px !important;
+  height: 200px !important;
+}
+.spotify-controles .spotify-voltar {
+  width: 42px !important;
+  height: 42px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: #f5dce8 !important;
+  font-size: 28px !important;
+}
+.spotify-controles .spotify-play {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  color: #180b16 !important;
+}
+.link-musica-youtube {
+  display: inline-block;
+  margin: 10px auto 0;
+  color: #ff91ad;
+  text-decoration: underline;
+  font-size: 13px;
+}
+.link-musica-youtube[hidden] { display: none !important; }
