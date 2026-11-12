@@ -35,9 +35,25 @@
       <div class="musica-area">
         <h2>Uma música para nós 🎶</h2>
         <p>Pra Você Guardei o Amor — Nando Reis e Ana Cañas</p>
-        <div class="botoes">
-          <button class="play" type="button" onclick="tocar()">▶️ Tocar</button>
-          <button class="pause" type="button" onclick="pausar()">⏸️ Pausar</button>
+        <div class="spotify-player">
+          <div class="spotify-faixa">
+            <div class="spotify-capa">♫</div>
+            <div class="spotify-info">
+              <strong>Pra Você Guardei o Amor</strong>
+              <span>Nando Reis &amp; Ana Cañas</span>
+            </div>
+            <span class="spotify-coracao">♥</span>
+          </div>
+          <div class="spotify-progresso">
+            <input id="progresso-musica" type="range" min="0" max="100" step="0.1" value="0" disabled aria-label="Avançar ou voltar na música" oninput="atualizarBarraVisual(this.value)" onchange="buscarMusica(this.value)">
+            <div class="spotify-tempos"><span id="tempo-atual">0:00</span><span id="tempo-total">0:00</span></div>
+          </div>
+          <div class="spotify-controles">
+            <button class="spotify-voltar" type="button" onclick="voltarInicio()" aria-label="Voltar ao início">↺</button>
+            <button id="botao-reproducao" class="spotify-play" type="button" onclick="alternarReproducao()" aria-label="Tocar música">▶</button>
+            <span class="spotify-nota">♫</span>
+          </div>
+          <p id="estado-musica" class="estado-musica">Carregando música...</p>
         </div>
         <div id="player-musica" class="player-musica" aria-hidden="true"></div>
         <noscript><a href="https://www.youtube.com/watch?v=sB8_zYjxSGg" target="_blank" rel="noopener">Ouvir a música no YouTube</a></noscript>
