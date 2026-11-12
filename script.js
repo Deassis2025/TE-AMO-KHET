@@ -38,6 +38,7 @@ setInterval(atualizarContador, 1000);
 let playerMusica;
 let intervaloProgresso;
 let duracaoMusica = 0;
+let playerPronto = false;
 function formatarTempo(segundos) {
   if (!Number.isFinite(segundos) || segundos < 0) segundos = 0;
   const minutos = Math.floor(segundos / 60);
@@ -73,12 +74,23 @@ function atualizarBotaoMusica(tocando) {
   const estado = document.getElementById("estado-musica");
   if (estado) estado.textContent = tocando ? "Tocando agora ❤️" : "Música pausada";
 }
+function mostrarFalhaMusica(mensagem) {
+  const estado = document.getElementById("estado-musica");
+  if (estado) estado.textContent = mensagem;
+  const link = document.getElementById("link-musica-youtube");
+  if (link) link.hidden = false;
+}
 function onYouTubeIframeAPIReady() {
+  if (!window.YT || !YT.Player) {
+    mostrarFalhaMusica("O player do YouTube não ficou disponível.");
+    return;
+  }
   playerMusica = new YT.Player("player-musica", {
     height: "200", width: "200", videoId: "sB8_zYjxSGg",
-    playerVars: { playsinline: 1, controls: 0, rel: 0 },
+    playerVars: { playsinline: 1, controls: 0, rel: 0, enablejsapi: 1, origin: window.location.origin },
     events: {
       onReady: function() {
+        playerPronto = true;
         duracaoMusica = playerMusica.getDuration() || 0;
         document.getElementById("estado-musica").textContent = "Pronta para tocar ❤️";
         atualizarInterfaceMusica();
@@ -91,30 +103,36 @@ function onYouTubeIframeAPIReady() {
           document.getElementById("estado-musica").textContent = "Música concluída 💗";
         }
       },
-      onError: function() {
-        document.getElementById("estado-musica").textContent = "Não foi possível carregar a música. Tente novamente.";
+      onError: function(event) {
+        mostrarFalhaMusica("O YouTube não conseguiu reproduzir esta faixa (erro " + event.data + ").");
       }
     }
   });
 }
 function tocar() {
-  if (playerMusica && playerMusica.playVideo) playerMusica.playVideo();
+  if (playerPronto && playerMusica && playerMusica.playVideo) playerMusica.playVideo();
 }
 function pausar() {
-  if (playerMusica && playerMusica.pauseVideo) playerMusica.pauseVideo();
+  if (playerPronto && playerMusica && playerMusica.pauseVideo) playerMusica.pauseVideo();
 }
 function alternarReproducao() {
-  if (!playerMusica || !playerMusica.getPlayerState) return;
+  if (!playerPronto || !playerMusica || !playerMusica.getPlayerState) return;
   if (playerMusica.getPlayerState() === YT.PlayerState.PLAYING) pausar();
   else tocar();
 }
 function buscarMusica(valor) {
-  if (!playerMusica || !duracaoMusica) return;
+  if (!playerPronto || !playerMusica || !duracaoMusica) return;
   playerMusica.seekTo((Number(valor) / 100) * duracaoMusica, true);
   atualizarInterfaceMusica();
 }
 function voltarInicio() {
-  if (!playerMusica) return;
+  if (!playerPronto || !playerMusica) return;
   playerMusica.seekTo(0, true);
   tocar();
 }
+
+setTimeout(function() {
+  if (!playerPronto) {
+    mostrarFalhaMusica("O YouTube está demorando para responder. Você pode abrir a música diretamente.");
+  }
+}, 15000);
