@@ -131,3 +131,7 @@ button:hover { transform:scale(1.05); }
   font-size: 13px;
 }
 .link-musica-youtube[hidden] { display: none !important; }
+
+.spotify-play:disabled { opacity:.45; cursor:not-allowed; transform:none !important; }
+.spotify-voltar:disabled { opacity:.45; cursor:not-allowed; }
+#audio-musica { display:none; }
