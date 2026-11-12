@@ -34,31 +34,27 @@ function atualizarContador() {
 atualizarContador();
 setInterval(atualizarContador, 1000);
 
-// Player com controles personalizados e barra de busca estilo Spotify.
-let playerMusica;
-let intervaloProgresso;
-let duracaoMusica = 0;
-let playerPronto = false;
+
+/* Player HTML5: não incorpora YouTube nem exibe anúncios. */
+const audioMusica = document.getElementById("audio-musica");
+let arrastandoProgresso = false;
 function formatarTempo(segundos) {
   if (!Number.isFinite(segundos) || segundos < 0) segundos = 0;
-  const minutos = Math.floor(segundos / 60);
-  const resto = Math.floor(segundos % 60);
-  return minutos + ":" + String(resto).padStart(2, "0");
+  return Math.floor(segundos / 60) + ":" + String(Math.floor(segundos % 60)).padStart(2, "0");
 }
 function atualizarBarraVisual(valor) {
   const barra = document.getElementById("progresso-musica");
   if (barra) barra.style.setProperty("--progresso", Math.max(0, Math.min(100, Number(valor))) + "%");
 }
 function atualizarInterfaceMusica() {
-  if (!playerMusica || typeof playerMusica.getCurrentTime !== "function") return;
-  const atual = playerMusica.getCurrentTime() || 0;
-  const duracao = playerMusica.getDuration() || duracaoMusica;
-  if (duracao > 0) {
-    duracaoMusica = duracao;
-    const barra = document.getElementById("progresso-musica");
-    if (barra) {
+  if (!audioMusica) return;
+  const duracao = audioMusica.duration;
+  const atual = audioMusica.currentTime || 0;
+  const barra = document.getElementById("progresso-musica");
+  if (Number.isFinite(duracao) && duracao > 0) {
+    if (barra && !arrastandoProgresso) {
       barra.disabled = false;
-      barra.value = Math.min(100, (atual / duracao) * 100);
+      barra.value = (atual / duracao) * 100;
       atualizarBarraVisual(barra.value);
     }
     document.getElementById("tempo-total").textContent = formatarTempo(duracao);
@@ -74,65 +70,52 @@ function atualizarBotaoMusica(tocando) {
   const estado = document.getElementById("estado-musica");
   if (estado) estado.textContent = tocando ? "Tocando agora ❤️" : "Música pausada";
 }
-function mostrarFalhaMusica(mensagem) {
-  const estado = document.getElementById("estado-musica");
-  if (estado) estado.textContent = mensagem;
-  const link = document.getElementById("link-musica-youtube");
-  if (link) link.hidden = false;
-}
-function onYouTubeIframeAPIReady() {
-  if (!window.YT || !YT.Player) {
-    mostrarFalhaMusica("O player do YouTube não ficou disponível.");
-    return;
-  }
-  playerMusica = new YT.Player("player-musica", {
-    height: "200", width: "200", videoId: "om7hWIdantU",
-    playerVars: { playsinline: 1, controls: 0, rel: 0, enablejsapi: 1, origin: window.location.origin },
-    events: {
-      onReady: function() {
-        playerPronto = true;
-        duracaoMusica = playerMusica.getDuration() || 0;
-        document.getElementById("estado-musica").textContent = "Pronta para tocar ❤️";
-        atualizarInterfaceMusica();
-        intervaloProgresso = setInterval(atualizarInterfaceMusica, 500);
-      },
-      onStateChange: function(event) {
-        atualizarBotaoMusica(event.data === YT.PlayerState.PLAYING);
-        if (event.data === YT.PlayerState.ENDED) {
-          atualizarInterfaceMusica();
-          document.getElementById("estado-musica").textContent = "Música concluída 💗";
-        }
-      },
-      onError: function(event) {
-        mostrarFalhaMusica("O YouTube não conseguiu reproduzir esta faixa (erro " + event.data + ").");
-      }
-    }
+function tocar() {
+  if (!audioMusica) return;
+  audioMusica.play().catch(() => {
+    document.getElementById("estado-musica").textContent = "Não foi possível reproduzir o arquivo de áudio.";
   });
 }
-function tocar() {
-  if (playerPronto && playerMusica && playerMusica.playVideo) playerMusica.playVideo();
-}
 function pausar() {
-  if (playerPronto && playerMusica && playerMusica.pauseVideo) playerMusica.pauseVideo();
+  if (audioMusica) audioMusica.pause();
 }
 function alternarReproducao() {
-  if (!playerPronto || !playerMusica || !playerMusica.getPlayerState) return;
-  if (playerMusica.getPlayerState() === YT.PlayerState.PLAYING) pausar();
-  else tocar();
+  if (!audioMusica || !audioMusica.src) return;
+  if (audioMusica.paused) tocar();
+  else pausar();
 }
 function buscarMusica(valor) {
-  if (!playerPronto || !playerMusica || !duracaoMusica) return;
-  playerMusica.seekTo((Number(valor) / 100) * duracaoMusica, true);
+  if (!audioMusica || !Number.isFinite(audioMusica.duration)) return;
+  audioMusica.currentTime = (Number(valor) / 100) * audioMusica.duration;
   atualizarInterfaceMusica();
 }
 function voltarInicio() {
-  if (!playerPronto || !playerMusica) return;
-  playerMusica.seekTo(0, true);
+  if (!audioMusica) return;
+  audioMusica.currentTime = 0;
   tocar();
 }
-
-setTimeout(function() {
-  if (!playerPronto) {
-    mostrarFalhaMusica("O YouTube está demorando para responder. Você pode abrir a música diretamente.");
-  }
-}, 15000);
+if (audioMusica) {
+  audioMusica.addEventListener("loadedmetadata", function() {
+    document.getElementById("estado-musica").textContent = "Pronta para tocar ❤️";
+    atualizarInterfaceMusica();
+  });
+  audioMusica.addEventListener("timeupdate", atualizarInterfaceMusica);
+  audioMusica.addEventListener("play", () => atualizarBotaoMusica(true));
+  audioMusica.addEventListener("pause", () => atualizarBotaoMusica(false));
+  audioMusica.addEventListener("ended", function() {
+    atualizarBotaoMusica(false);
+    document.getElementById("estado-musica").textContent = "Música concluída 💗";
+  });
+  audioMusica.addEventListener("error", function() {
+    const estado = document.getElementById("estado-musica");
+    if (estado) estado.textContent = "Aguardando o arquivo de áudio para tocar sem anúncios ❤️";
+    const barra = document.getElementById("progresso-musica");
+    if (barra) barra.disabled = true;
+    const botao = document.getElementById("botao-reproducao");
+    if (botao) botao.disabled = true;
+  });
+  audioMusica.addEventListener("loadedmetadata", function() {
+    const botao = document.getElementById("botao-reproducao");
+    if (botao) botao.disabled = false;
+  });
+}
