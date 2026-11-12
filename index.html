@@ -3,45 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Você foi meu Nocaute ❤️</title>
+  <meta name="theme-color" content="#09000b">
+  <title>Minha pessoa favorita ❤️</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  
-  <!-- CORAÇÕES -->
-  <div class="hearts"></div>
-
-  <!-- TOPO -->
-  <div class="topo">
-    <img src="foto-casal.jpg" alt="Nossa foto juntos">
-  </div>
-
-  <!-- CONTEÚDO -->
-  <div class="conteudo">
-    <h1>Você foi meu nocaute ❤️</h1>
-
-    <p>
-      Tem pessoas que chegam devagar…<br>
-      Você chegou e virou tudo de uma vez.
-    </p>
-
-    <p>
-      Não foi força, foi sentimento.<br>
-      Não foi acaso, foi destino.
-    </p>
-
-    <div class="botoes">
-      <button class="play" onclick="tocar()">▶️ Tocar</button>
-      <button class="pause" onclick="pausar()">⏸️ Pausar</button>
-    </div>
-
-    <p class="frase-final">
-      Se amar você é cair, eu caio toda vez… e nem quero levantar.
-    </p>
-  </div>
-
-  <audio id="musica" src="Jorge & Mateus - Nocaute (Áudio Oficial) - Jorge & Mateus Oficial.mp3"></audio>
-
+  <div class="hearts" aria-hidden="true"></div>
+  <main class="pagina">
+    <section class="galeria" aria-label="Nossas fotos">
+      <img class="foto foto-pb" src="foto-casal.jpg" alt="Nossa foto em preto e branco">
+      <img class="foto foto-colorida" src="foto-nova.jpg" alt="Nossa segunda foto juntos">
+    </section>
+    <section class="conteudo">
+      <p class="etiqueta">NOSSA HISTÓRIA ❤️</p>
+      <h1>Meu lugar favorito é ao seu lado ❤️</h1>
+      <p>Desde que você chegou, meu coração encontrou o seu lugar.</p>
+      <p>Cada momento com você se tornou uma lembrança que eu quero guardar para sempre.</p>
+      <p>Não preciso de um amor perfeito. Só quero continuar construindo o nosso, todos os dias.</p>
+      <div class="contador-area">
+        <h2>Juntos há...</h2>
+        <p class="data-inicio">Desde 01 de fevereiro de 2025</p>
+        <div id="contador" class="contador" role="timer" aria-live="off">
+          <div><strong id="anos">0</strong><span>anos</span></div>
+          <div><strong id="meses">0</strong><span>meses</span></div>
+          <div><strong id="dias">0</strong><span>dias</span></div>
+          <div><strong id="horas">00</strong><span>horas</span></div>
+          <div><strong id="minutos">00</strong><span>minutos</span></div>
+          <div><strong id="segundos">00</strong><span>segundos</span></div>
+        </div>
+      </div>
+      <div class="musica-area">
+        <h2>Uma música para nós 🎶</h2>
+        <p>Pra Você Guardei o Amor — Nando Reis e Ana Cañas</p>
+        <div class="botoes">
+          <button class="play" type="button" onclick="tocar()">▶️ Tocar</button>
+          <button class="pause" type="button" onclick="pausar()">⏸️ Pausar</button>
+        </div>
+        <div id="player-musica" class="player-musica" aria-hidden="true"></div>
+        <noscript><a href="https://www.youtube.com/watch?v=sB8_zYjxSGg" target="_blank" rel="noopener">Ouvir a música no YouTube</a></noscript>
+      </div>
+      <p class="frase-final">Se eu pudesse escolher de novo, escolheria você. Em todos os dias, em todas as vidas. 💗</p>
+      <p class="assinatura">Com amor, para sempre nós dois. ✨</p>
+    </section>
+  </main>
   <script src="script.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
